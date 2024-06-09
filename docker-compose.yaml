@@ -1,0 +1,30 @@
+version: '3.1'
+
+services:
+  node:
+    container_name: villas
+    image: erigrid/node:mooc
+    ports:
+      - "8080:8080"
+      - "12000:12000/udp"
+    volumes:
+      - ./config.conf:/etc/node/config.conf
+    command:
+      - node
+      - /etc/node/config.conf
+    depends_on:
+      - mqtt
+  dpsim:
+    container_name: dpsim
+    image: erigrid/dpsim:mooc
+    ports:
+      - "8888:8888"
+  mqtt:
+    image: eclipse-mosquitto:latest
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
